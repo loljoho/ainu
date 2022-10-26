@@ -8,6 +8,8 @@
 import * as dotenv from 'dotenv';
 dotenv.config();
 
+// import { IRCConfig } from './IRCConfig';
+
 const config = {
   irc: {
     server: 'irc.snoonet.org',
@@ -17,8 +19,8 @@ const config = {
       realName: 'ainu',
       password: process.env.NICKSERV_PASS,
       port: 6667,
-      localAddress: null,
-      debug: true,
+      // localAddress: null,
+      debug: false,
       showErrors: true,
       autoRejoin: false,
       autoConnect: true,
@@ -34,7 +36,7 @@ const config = {
       stripColors: false,
       channelPrefixes: "&#",
       messageSplit: 512,
-      encoding: null
+      // encoding: null
     }
   }
 };

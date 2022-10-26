@@ -3,24 +3,28 @@ import { messageLogHandler } from './logger';
 
 import config from './config/config';
 
+import { Bot } from './bot';
+
 /**
  * Connection
  */
-const bot = new irc.Client(config.irc.server, config.irc.nick, config.irc.options)
+// const bot = new irc.Client(config.irc.server, config.irc.nick, config.irc.options)
+const bot = new Bot(config.irc.server, config.irc.nick, config.irc.options)
 
 /**
  * Event Listeners
  *
  * @docs https://node-irc-upd.readthedocs.io/en/stable/API.html#events
  */
-
-
 /**
- * Listen for errors
+ * Listen for test command in channel messages
  */
-bot.addListener('error', function (message: string) {
-  console.log('error: ', message);
-});
+bot.addCommand('!debug', (nick: string, to: string, text: string, message: string) => {
+  const cmd = text.split(' ')[0];
+  if (cmd === '!debug') {
+    bot.say(to, `${nick} says in ${to}: ${text} (${message})`);
+  }
+}, 'message#');
 
 /**
  * Listen for weather command in channel messages
@@ -31,15 +35,6 @@ bot.addListener('message#', function (nick: string, to: string, text: string, me
   let location = msgArr[1];
   if (cmd === '!weather' || cmd === '!we') {
     bot.say(to, `How would I know what the weather's like in ${location}?`);
-  }
-});
-
-/**
- * Listen for test command in channel messages
- */
-bot.addListener('message#', function (nick: string, to: string, text: string, message: string) {
-  if (text === '!debug') {
-    bot.say(to, `${nick} says in ${to}: ${text} (${message})`);
   }
 });
 
@@ -81,8 +76,3 @@ bot.addListener('message', function (nick: string, to: string, text: string, mes
     bot.disconnect();
   }
 });
-
-/**
- * Log messages to console
- */
-bot.addListener('message', messageLogHandler);
