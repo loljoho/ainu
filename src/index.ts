@@ -1,5 +1,4 @@
 import * as irc from 'irc-upd';
-import { messageLogHandler } from './logger';
 
 import config from './config/config';
 
