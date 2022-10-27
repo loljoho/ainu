@@ -39,27 +39,35 @@ export class Bot extends Client {
     // Add handler for message logger
     super.addListener('message', messageLogHandler);
 
-    // Add handlers for channel commands
+    // Add handler for join/part/quit commands
     this.addChanCommands();
+    // Add handler for points inc/dec with ++/--
+    this.addPointsCommands();
+  }
 
-    // Add handler for points add/subtract with ++/--
+  /**
+   * Add increment/decrement points commands handlers
+   *
+   * @TODO fix `say(to)` for this
+   * @TODO create dedicated points module
+   */
+  addPointsCommands() {
     super.addListener('message#', (nick: string, to: string, text: string) => {
-      const regexAdd = /^(.+)\+\+$/;
-      const regexSub = /^(.+)--$/;
+      const regexInc = /^(.+)\+\+$/;
+      const regexDec = /^(.+)--$/;
       const item = text.slice(0, text.length - 2);
-      if (regexAdd.exec(text)) {
+      if (regexInc.exec(text)) {
         super.say(to, `${item}'s points have increased by 1.`);
-      } else if (regexSub.exec(text)) {
+      } else if (regexDec.exec(text)) {
         super.say(to, `${item}'s points have decreased by 1.`);
       }
-    })
+    });
   }
 
   /**
    * Add Join/Part/Quit command handlers
    */
   addChanCommands() {
-    // Add handler for join/part/quit commands
     super.addListener('message', (nick: string, to: string, text: string) => {
 
       // split `text` into array of [cmd, param]

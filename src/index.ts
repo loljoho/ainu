@@ -21,6 +21,7 @@ const bot = new Bot(config.irc.server, config.irc.nick, config.irc.options)
 bot.addCommand('!debug', (nick: string, to: string, text: string, message: string) => {
   const cmd = text.split(' ')[0];
   if (cmd === '!debug') {
+    console.log(`Detected command ${cmd} in ${to}`);
     bot.say(to, `${nick} says in ${to}: ${text} (${message})`);
   }
 }, 'message#');
