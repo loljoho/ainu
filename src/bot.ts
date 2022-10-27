@@ -40,7 +40,7 @@ export class Bot extends Client {
     super.addListener('message', messageLogHandler);
 
     // Add handler for join/part/quit commands
-    this.addChanCommands();
+    this.addServerCommands();
     // Add handler for points inc/dec with ++/--
     this.addPointsCommands();
   }
@@ -67,7 +67,7 @@ export class Bot extends Client {
   /**
    * Add Join/Part/Quit command handlers
    */
-  addChanCommands() {
+  addServerCommands() {
     super.addListener('message', (nick: string, to: string, text: string) => {
 
       // split `text` into array of [cmd, param]

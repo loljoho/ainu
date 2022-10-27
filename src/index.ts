@@ -4,6 +4,8 @@ import { config } from './config/config';
 
 import { Bot } from './bot';
 
+import { getCurrentWeather } from './utils/weather';
+
 /**
  * Connection
  */
@@ -15,6 +17,7 @@ const bot = new Bot(config.irc.server, config.irc.nick, config.irc.options)
  *
  * @docs https://node-irc-upd.readthedocs.io/en/stable/API.html#events
  */
+
 /**
  * Listen for test command in channel messages
  */
@@ -29,12 +32,16 @@ bot.addCommand('!debug', (nick: string, to: string, text: string, message: strin
 /**
  * Listen for weather command in channel messages
  */
-bot.addListener('message#', function (nick: string, to: string, text: string, message: string) {
-  let msgArr = text.split(' ');
-  let cmd = msgArr[0];
-  let location = msgArr[1];
+bot.addListener('message#', function (nick: string, to: string, text: string) {
+  const m = text.split(' ');
+  const cmd = m[0];
+  const zip = m[1];
   if (cmd === '!weather' || cmd === '!we') {
-    bot.say(to, `How would I know what the weather's like in ${location}?`);
+    getCurrentWeather(zip)
+      .then(res => {
+        console.log(res);
+        bot.say(to, `Current: ${res.weather[0].main} ${res.main.temp}°F; Feels Like: ${res.main.feels_like}°F; Humidity: ${res.main.humidity}%; Pressure: ${res.main.pressure}hPa; High: ${res.main.temp_max}; Low: ${res.main.temp_min}; Wind: ${res.wind.speed}mph at ${res.wind.deg}° - ${res.name}`)
+      });
   }
 });
 
@@ -52,27 +59,13 @@ bot.addListener('message#', function (nick: string, to: string, text: string, me
 /**
  * Listen for channel joins
  */
-bot.addListener('join', function (channel: string, nick: string) {
-  // Welcome them in!
-  if (nick !== 'ainu') {
-    bot.say(channel, `Henlo, ${nick}!`);
-  }
-});
+// bot.addListener('join', function (channel: string, nick: string) {
+//   bot.say(channel, `Henlo, ${nick}!`);
+// });
 
 /**
  * Listen for channel parts
  */
-bot.addListener('part', function (channel: string, nick: string) {
-  // Bid them adieu!
-  bot.say(channel, `Goodbye, ${nick}!`);
-});
-
-/**
- * Listen for quit command in all messages
- */
-bot.addListener('message', function (nick: string, to: string, text: string, message: string) {
-  if (text === '!quit' && nick === 'cars') {
-    bot.say(to, `${nick} hates me.`)
-    bot.disconnect();
-  }
-});
+// bot.addListener('part', function (channel: string, nick: string) {
+//   bot.say(channel, `Goodbye, ${nick}!`);
+// });

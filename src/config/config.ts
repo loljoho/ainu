@@ -8,8 +8,6 @@
 import * as dotenv from 'dotenv';
 dotenv.config();
 
-// import { IRCConfig } from './IRCConfig';
-
 export const config = {
   env: process.env,
   irc: {
