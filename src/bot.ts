@@ -31,6 +31,34 @@ export class Bot extends Client {
   constructor(server: string, nick: string, options: IRCConfig) {
     super(server, nick, options);
 
+    // Add handler for error listener
+    super.addListener('error', (message: string) => {
+      console.log('ERROR', message);
+    });
+
+    // Add handler for message logger
+    super.addListener('message', messageLogHandler);
+
+    // Add handlers for channel commands
+    this.addChanCommands();
+
+    // Add handler for points add/subtract with ++/--
+    super.addListener('message#', (nick: string, to: string, text: string) => {
+      const regexAdd = /^(.+)\+\+$/;
+      const regexSub = /^(.+)--$/;
+      const item = text.slice(0, text.length - 2);
+      if (regexAdd.exec(text)) {
+        super.say(to, `${item}'s points have increased by 1.`);
+      } else if (regexSub.exec(text)) {
+        super.say(to, `${item}'s points have decreased by 1.`);
+      }
+    })
+  }
+
+  /**
+   * Add Join/Part/Quit command handlers
+   */
+  addChanCommands() {
     // Add handler for join/part/quit commands
     super.addListener('message', (nick: string, to: string, text: string) => {
 
@@ -63,32 +91,8 @@ export class Bot extends Client {
           super.disconnect();
         }
       }
-    })
-
-    // Add handler for error listener
-    super.addListener('error', (message: string) => {
-      console.log('ERROR', message);
     });
-
-    // Add handler for message logger
-    super.addListener('message', messageLogHandler);
-
-    // Add handler for points add/subtract with ++/--
-    super.addListener('message#', (nick: string, to: string, text: string) => {
-      const regexAdd = /^(.+)\+\+$/;
-      const regexSub = /^(.+)--$/;
-      const item = text.slice(0, text.length - 2);
-      if (regexAdd.exec(text)) {
-        super.say(to, `${item}'s points have increased by 1.`);
-      } else if (regexSub.exec(text)) {
-        super.say(to, `${item}'s points have decreased by 1.`);
-      }
-    })
   }
-
-  /**
-   * A
-   */
 
   /**
    * Add standard custom commands
