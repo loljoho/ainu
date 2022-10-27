@@ -10,7 +10,8 @@ dotenv.config();
 
 // import { IRCConfig } from './IRCConfig';
 
-const config = {
+export const config = {
+  env: process.env,
   irc: {
     server: 'irc.snoonet.org',
     nick: 'ainu',
@@ -40,5 +41,3 @@ const config = {
     }
   }
 };
-
-export default config;

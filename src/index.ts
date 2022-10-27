@@ -1,6 +1,6 @@
 import * as irc from 'irc-upd';
 
-import config from './config/config';
+import { config } from './config/config';
 
 import { Bot } from './bot';
 
