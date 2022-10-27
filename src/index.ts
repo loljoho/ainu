@@ -51,8 +51,16 @@ bot.addListener('message#', function (nick: string, to: string, text: string) {
 bot.addListener('message#', function (nick: string, to: string, text: string, message: string) {
   const regex = /.*?ainu.*?/;
   const found = text.match(regex);
+  const messages = [
+    `What did you say about me?`,
+    `Say that again, ${nick}?`,
+    `Excuse me?`,
+    `Pardon?`,
+    `You rang, ${nick}?`,
+  ];
   if (found && Math.random() < 0.25) {
-    bot.say(to, `What did you say about me?`);
+    const i = Math.floor(Math.random() * messages.length);
+    bot.say(to, messages[i]);
   }
 });
 
