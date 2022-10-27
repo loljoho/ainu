@@ -20,8 +20,19 @@ import { config } from '../config/config';
  */
 export const getCurrentWeather = async (zipcode: string) => {
   const apikey = config.env.OPENWEATHER_API_KEY;
-  const path = `https://api.openweathermap.org/data/2.5/weather?zip=${zipcode}&appid=${apikey}`;
+  const units = 'imperial';
+  const path = `https://api.openweathermap.org/data/2.5/weather?zip=${zipcode}&appid=${apikey}&units=${units}`;
 
   const response = await axios.get(path);
+  return response.data;
+}
+
+export const getForecast = async (zipcode: string) => {
+  const apikey = config.env.OPENWEATHER_API_KEY;
+  // const units = 'imperial';
+  const path = `https://api.openweathermap.org/data/2.5/forecast?zip=${zipcode}&appid=${apikey}`;
+
+  const response = await axios.get(path);
+
   return response.data;
 }

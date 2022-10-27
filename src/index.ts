@@ -1,10 +1,11 @@
 import * as irc from 'irc-upd';
+import * as c from 'irc-colors';
 
 import { config } from './config/config';
 
 import { Bot } from './bot';
 
-import { getCurrentWeather } from './utils/weather';
+import { getCurrentWeather, getForecast } from './utils/weather';
 
 /**
  * Connection
@@ -40,13 +41,33 @@ bot.addListener('message#', function (nick: string, to: string, text: string) {
     getCurrentWeather(zip)
       .then(res => {
         console.log(res);
-        bot.say(to, `Current: ${res.weather[0].main} ${res.main.temp}°F; Feels Like: ${res.main.feels_like}°F; Humidity: ${res.main.humidity}%; Pressure: ${res.main.pressure}hPa; High: ${res.main.temp_max}; Low: ${res.main.temp_min}; Wind: ${res.wind.speed}mph at ${res.wind.deg}° - ${res.name}`)
+
+        let msg = c.bold('Current Weather - ' + res.name + ': ')
+          + res.weather[0].main + ' ' + res.main.temp + '°F; '
+          + c.bold('Feels Like: ') + res.main.feels_like + '°F; '
+          + c.bold('Humidity: ') + res.main.humidity + '%; '
+          + c.bold('Pressure: ') + res.main.pressure + 'hPa; '
+          + c.bold('High: ') + res.main.temp_max + '°F; '
+          + c.bold('Low: ') + res.main.temp_min + '°F; '
+          + c.bold('Wind: ') + res.wind.speed + 'mph at ' + res.wind.deg + '°';
+          // + ' — ' + c.italic();
+        bot.say(to, msg);
+        // bot.say(to, `Current: ${res.weather[0].main} ${res.main.temp}°F; Feels Like: ${res.main.feels_like}°F; Humidity: ${res.main.humidity}%; Pressure: ${res.main.pressure}hPa; High: ${res.main.temp_max}; Low: ${res.main.temp_min}; Wind: ${res.wind.speed}mph at ${res.wind.deg}° - ${res.name}`)
+      });
+  }
+  else if (cmd === '!forecast' || cmd === '!fc') {
+    getForecast(zip)
+      .then(res => {
+        console.log(res);
+        let msg = `Ohnoes`;
+        msg += '!';
+        bot.say(to, msg);
       });
   }
 });
 
 /**
- * Listen for `ainu` in channel messages
+ * Listen for `ainu` iin channel messages
  */
 bot.addListener('message#', function (nick: string, to: string, text: string, message: string) {
   const regex = /.*?ainu.*?/;
