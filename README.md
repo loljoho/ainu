@@ -1,32 +1,25 @@
 # ainu
 
-IRC butt
-
-## To-Do
-
-- [ ] Configuration
-  - [ ]
-  - [ ]
-- [ ] Bot Commands
-  - [ ] Test Command
-  - [ ] Weather
-- [ ] Storage
-  - [ ] Database
+WIP - IRC butt
 
 ## Application Structure
 
 ```
-├── src/
-│   ├── util/
+├── dist/                       --> Build Directory
+│
+├── src/                        --> Source Directory
 │   ├── components/
-│   ├── config/
 │   │   ├──
 │   │   └──
-│   ├── data/
+│   ├── config/                 --> Application Configuration
+│   │   ├── config.ts
+│   │   └──
+│   ├── utils/                  --> Utility Scripts
+│   │   ├──
+│   │   └──
+│   ├── bot.ts
 │   └── index.ts
-├── dist/
-├── package.json
-├── package-lock.json
-├── README.md
-└── tsconfig.json
+│
+├── .env                        --> Environmental Variables
+└── package.json                --> Manifest File
 ```
