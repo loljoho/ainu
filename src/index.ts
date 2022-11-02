@@ -7,8 +7,6 @@ import { Bot } from './bot';
 import {
   getCurrentWeather,
   getForecast,
-  getCurrentWeatherNew,
-  getForecastNew,
 } from './utils/weather';
 
 /**
@@ -42,9 +40,9 @@ bot.addListener('message#', function (nick: string, to: string, text: string) {
   const cmd = m[0];
   const zip = m[1];
   if (cmd === '!weather' || cmd === '!we') {
-    getCurrentWeatherNew(zip)
+    getCurrentWeather(zip)
       .then(res => {
-        console.log(res)
+        console.log('\n\nres:', res)
         const separator = ' · ';
         // const separator = '; ';
 
@@ -76,11 +74,10 @@ bot.addListener('message#', function (nick: string, to: string, text: string) {
       });
   }
   else if (cmd === '!forecast' || cmd === '!fc') {
-    getForecastNew(zip)
+    getForecast(zip)
       .then(res => {
-        // console.log(res);
-        console.log(res.forecast.forecastday);
-        console.log(res.forecast.forecastday[0]);
+        console.log('\n\nres:', res);
+        console.log('\n\nres.forecast:', res.forecast);
         const separator = ' · ';
         const days = res.forecast.forecastday;
 
