@@ -8,6 +8,7 @@ import {
   getCurrentWeather,
   getForecast,
   getCurrentWeatherNew,
+  getForecastNew,
 } from './utils/weather';
 
 /**
@@ -41,54 +42,80 @@ bot.addListener('message#', function (nick: string, to: string, text: string) {
   const cmd = m[0];
   const zip = m[1];
   if (cmd === '!weather' || cmd === '!we') {
-    // getCurrentWeather(zip)
-    //   .then(res => {
-    //     console.log(res);
+    getCurrentWeatherNew(zip)
+      .then(res => {
+        console.log(res)
+        const separator = ' · ';
+        // const separator = '; ';
 
-    //     let msg = c.bold('Current Weather - ' + res.name + ': ')
-    //       + res.weather[0].main + ' ' + res.main.temp + '°F; '
-    //       + c.bold('Feels Like: ') + res.main.feels_like + '°F; '
-    //       + c.bold('Humidity: ') + res.main.humidity + '%; '
-    //       + c.bold('Pressure: ') + res.main.pressure + 'hPa; '
-    //       + c.bold('High: ') + res.main.temp_max + '°F; '
-    //       + c.bold('Low: ') + res.main.temp_min + '°F; '
-    //       + c.bold('Wind: ') + res.wind.speed + 'mph at ' + res.wind.deg + '°';
-    //     bot.say(to, msg);
-    //   });
-      getCurrentWeatherNew(zip)
-        .then(res => {
-          console.log(res)
-          const separator = ' · ';
-          // const separator = '; ';
+        /**
+         * Construct message string for Weather command
+         *
+         * @TODO refactor into external function(s)
+         * @TODO refactor with template literals
+         * @TODO allow users to supply parameters for additional values
+         */
+        let msg = nick + ': Current Weather in '
+          + c.bold.purple(res.location.name + ', ' + res.location.region) + ' — '
+          + res.current.condition.text + ', '
+          + res.current.temp_f + '°F (' + res.current.temp_c + '°C)'
+          + separator + c.bold('Feels Like: ') + res.current.feelslike_f + '°F (' + res.current.feelslike_c + '°C)'
+          + separator + c.bold('Humidity: ') + res.current.humidity + '%'
+          + separator + c.bold('Wind: ') + res.current.wind_mph + 'mph (' + res.current.wind_kph + 'kph) ' + res.current.wind_dir + ''
+          + separator + c.bold('Pressure: ') + res.current.pressure_mb + 'mb (' + res.current.pressure_in + '″Hg)'
+          + separator + c.bold('Precip: ') + res.current.precip_in + 'in (' + res.current.precip_mm + 'mm)'
+          + ' — (' + c.italic('Updated ' + res.current.last_updated) + ')'
+          // + c.bold('Clouds: ') + res.current.cloud + '%'
+          // + c.bold('Visibility: ') +res.current.vis_miles + 'mi (' +res.current.vis_km + 'km)'
+          // + c.bold('Gusts: ') + res.current.gust_mph + 'mph (' + res.current.gust_kph + 'kph)'
+          // + c.bold('UV: ') + res.current.uv
 
-          // @TODO create utility function for this —
-          let msg = nick + ': Current Weather in '
-            + c.bold.purple(res.location.name + ', ' + res.location.region) + ' — '
-            + res.current.condition.text + ', '
-            + res.current.temp_f + '°F (' + res.current.temp_c + '°C)'
-            + separator + c.bold('Feels Like: ') + res.current.feelslike_f + '°F (' + res.current.feelslike_c + '°C)'
-            + separator + c.bold('Humidity: ') + res.current.humidity + '%'
-            + separator + c.bold('Wind: ') + res.current.wind_mph + 'mph (' + res.current.wind_kph + 'kph) ' + res.current.wind_dir + ''
-            + separator + c.bold('Pressure: ') + res.current.pressure_mb + 'mb (' + res.current.pressure_in + '″Hg)'
-            + separator + c.bold('Precip: ') + res.current.precip_mm + 'mm (' + res.current.precip_in + 'in)'
-            + ' — (' + c.italic('Updated ' + res.current.last_updated) + ')'
-            // + c.bold('Clouds: ') + res.current.cloud + '%'
-            // + c.bold('Visibility: ') +res.current.vis_miles + 'mi (' +res.current.vis_km + 'km)'
-            // + c.bold('Gusts: ') + res.current.gust_mph + 'mph (' + res.current.gust_kph + 'kph)'
-            // + c.bold('UV: ') + res.current.uv
+        console.log('Message string `msg`:', msg);
+        bot.say(to, msg);
 
-          console.log('Message string `msg`:', msg);
-          bot.say(to, msg);
-
-        });
+      });
   }
   else if (cmd === '!forecast' || cmd === '!fc') {
-    getForecast(zip)
+    getForecastNew(zip)
       .then(res => {
-        console.log(res);
-        let msg = `Ohnoes`;
-        msg += '!';
+        // console.log(res);
+        console.log(res.forecast.forecastday);
+        console.log(res.forecast.forecastday[0]);
+        const separator = ' · ';
+        const days = res.forecast.forecastday;
+
+        /**
+         * Construct message string for Forecast command
+         *
+         * @TODO refactor into external function(s)
+         * @TODO refactor with template literals
+         * @TODO allow users to supply parameters for different days
+         */
+        let msg = nick + ': Forecast for ' + c.bold.blue(days[0].date) + ' in '
+          + c.bold.purple(res.location.name + ', ' + res.location.region) + ' — '
+          + days[0].day.condition.text + ', '
+          + days[0].day.avgtemp_f + '°F (' + days[0].day.avgtemp_c + '°C)'
+          + separator + c.bold('High: ') + days[0].day.maxtemp_f + '°F (' + days[0].day.maxtemp_c + '°C)'
+          + separator + c.bold('Low: ') + days[0].day.mintemp_f + '°F (' + days[0].day.mintemp_c + '°C)'
+          + separator + c.bold('Humidity: ') + days[0].day.avghumidity + '%'
+          + separator + c.bold('Wind: ') + days[0].day.maxwind_mph + 'mph (' + days[0].day.maxwind_kph + 'kph)'
+          + separator + c.bold('Precip: ') + days[0].day.totalprecip_in + 'in (' + days[0].day.totalprecip_mm + 'mm)'
+        if (days[0].day.daily_chance_of_rain > 0) {
+          msg += separator + c.bold('Chance of Rain: ') + days[0].day.daily_chance_of_rain + '%'
+        }
+        if (days[0].day.daily_chance_of_snow > 0) {
+          msg += separator + c.bold('Chance of Snow: ') + days[0].day.daily_chance_of_snow + '%'
+        }
+
+        msg += separator + c.bold('Sunrise: ') + days[0].astro.sunrise + separator + c.bold('Sunset: ') + days[0].astro.sunset
+
+        console.log('Message string `msg`:', msg);
         bot.say(to, msg);
+
+
+        // const separator = '; ';
+
+        // @TODO create utility function for this —
       });
   }
 });

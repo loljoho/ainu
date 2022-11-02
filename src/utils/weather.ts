@@ -33,24 +33,27 @@ export const getCurrentWeatherNew = async (location: string) => {
   return response.data;
 }
 
-
 /**
- * Current Weather Request from OpenWeatherMap API
+ * Weather Forecast Request from Weather API
  *
  * @example
- * const temp = getCurrentWeather('10038').then(res => console.log(res));
+ * const temp = getForecast('10038').then(res => console.log(res));
  * @param {string} zipcode
- * @return {Promise<CurrentWeather>}
- * @link https://openweathermap.org/current#name
- * @link https://openweathermap.org/current#cityid
- * @link https://openweathermap.org/api/geocoding-api
+ * @returns {Promise<CurrentWeather>}
+ * @link https://www.weatherapi.com/docs/
  */
-export const getCurrentWeather = async (zipcode: string) => {
-  const apikey = config.env.OPENWEATHER_API_KEY;
-  const units = 'imperial';
-  const path = `https://api.openweathermap.org/data/2.5/weather?zip=${zipcode}&appid=${apikey}&units=${units}`;
+export const getForecastNew = async (zipcode: string) => {
+  const apikey = config.env.WEATHERAPI_API_KEY;
+  const days = 2;
+  // const cnt = 0;  // number of timestamps to return
+  const path = `http://api.weatherapi.com/v1/forecast.json?key=${apikey}&q=${zipcode}&days=${days}`;
+
+  console.log('Sending Weather Forecast request to Weather API at:');
+  console.log(path);
+  console.log('...');
 
   const response = await axios.get(path);
+
   return response.data;
 }
 
@@ -73,5 +76,25 @@ export const getForecast = async (zipcode: string) => {
 
   const response = await axios.get(path);
 
+  return response.data;
+}
+
+/**
+ * Current Weather Request from OpenWeatherMap API
+ *
+ * @example
+ * const temp = getCurrentWeather('10038').then(res => console.log(res));
+ * @param {string} zipcode
+ * @return {Promise<CurrentWeather>}
+ * @link https://openweathermap.org/current#name
+ * @link https://openweathermap.org/current#cityid
+ * @link https://openweathermap.org/api/geocoding-api
+ */
+export const getCurrentWeather = async (zipcode: string) => {
+  const apikey = config.env.OPENWEATHER_API_KEY;
+  const units = 'imperial';
+  const path = `https://api.openweathermap.org/data/2.5/weather?zip=${zipcode}&appid=${apikey}&units=${units}`;
+
+  const response = await axios.get(path);
   return response.data;
 }
