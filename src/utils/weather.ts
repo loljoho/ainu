@@ -1,8 +1,7 @@
 /**
- * Weather Service
+ * Weather Services
  *
- * OpenWeatherMap API
- * WeatherAPI
+ * Weather API
  * Also consider Open-Meteo?
  *
  * @todo Implement non-US location parameters
@@ -27,7 +26,6 @@ export const getCurrentWeather = async (location: string) => {
 
   console.log('Sending Current Weather request to Weather API at:');
   console.log(path);
-  console.log('...');
 
   const response = await axios.get(path);
   return response.data;
@@ -50,7 +48,6 @@ export const getForecast = async (zipcode: string) => {
 
   console.log('Sending Weather Forecast request to Weather API at:');
   console.log(path);
-  console.log('...');
 
   const response = await axios.get(path);
 
