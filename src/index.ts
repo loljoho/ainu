@@ -2,6 +2,8 @@ import * as irc from 'irc-upd';
 import * as c from 'irc-colors';
 import { config } from './config/config';
 
+import regions from './data/regions.json';
+
 import { Bot } from './bot';
 
 import {
@@ -55,14 +57,22 @@ bot.addListener('message#', function (nick: string, to: string, text: string) {
          */
         let msg = '(' + nick + ') Current Weather for ';
 
-        // append location
         let country = res.location.country;
+        let region = res.location.region;
+        type ObjectKey = keyof typeof regions;
+
+        // modify location region if US or Canada
+        if (country.includes('United States') || country.includes('Canada')) {
+          // replace state/province/territory name with abbreviation
+          const abbr = region as ObjectKey;
+          region = regions[abbr];
+        }
+
+        // append location country
         if (country.includes('United States')) {
           country = 'USA';
-        } else if (country.includes('Taiwan')) {
-          country = 'Formosa';
         }
-        msg += c.bold.navy(res.location.name + ', ' + res.location.region + ', ' + country) + ' — ';
+        msg += c.bold.navy(res.location.name + ', ' + region + ', ' + country) + ' — ';
 
         // append condition text
         msg += res.current.condition.text + ', ';
@@ -103,14 +113,22 @@ bot.addListener('message#', function (nick: string, to: string, text: string) {
         let msg = '(' + nick + ') Daily Forecast for ';
         // + c.bold.blue(days[0].date) + ' in '
 
-        // append location
         let country = res.location.country;
+        let region = res.location.region;
+        type ObjectKey = keyof typeof regions;
+
+        // modify location region if US or Canada
+        if (country.includes('United States') || country.includes('Canada')) {
+          // replace state/province/territory name with abbreviation
+          const abbr = region as ObjectKey;
+          region = regions[abbr];
+        }
+
+        // append location country
         if (country.includes('United States')) {
           country = 'USA';
-        } else if (country.includes('Taiwan')) {
-          country = 'Formosa';
         }
-        msg += c.bold.navy(res.location.name + ', ' + res.location.region + ', ' + country) + ' — ';
+        msg += c.bold.navy(res.location.name + ', ' + region + ', ' + country) + ' — ';
         // append condition text
         msg += days[0].day.condition.text + ', ';
 
