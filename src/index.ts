@@ -53,10 +53,22 @@ bot.addListener('message#', function (nick: string, to: string, text: string) {
          * @TODO refactor with template literals
          * @TODO allow users to supply parameters for additional values
          */
-        let msg = '(' + nick + ') Current Weather for '
-          + c.bold.navy(res.location.name + ', ' + res.location.region) + ' — '
-          + res.current.condition.text + ', '
-          + res.current.temp_f + '°F (' + res.current.temp_c + '°C)'
+        let msg = '(' + nick + ') Current Weather for ';
+
+        // append location
+        let country = res.location.country;
+        if (country.includes('United States')) {
+          country = 'USA';
+        } else if (country.includes('Taiwan')) {
+          country = 'Formosa';
+        }
+        msg += c.bold.navy(res.location.name + ', ' + res.location.region + ', ' + country) + ' — ';
+
+        // append condition text
+        msg += res.current.condition.text + ', ';
+
+        // append weather values
+        msg += res.current.temp_f + '°F (' + res.current.temp_c + '°C)'
           + separator + c.bold('Feels Like: ') + res.current.feelslike_f + '°F (' + res.current.feelslike_c + '°C)'
           + separator + c.bold('Humidity: ') + res.current.humidity + '%'
           + separator + c.bold('Wind: ') + res.current.wind_mph + 'mph (' + res.current.wind_kph + 'kph) ' + res.current.wind_dir + ''
@@ -88,10 +100,22 @@ bot.addListener('message#', function (nick: string, to: string, text: string) {
          * @TODO refactor with template literals
          * @TODO allow users to supply parameters for different days
          */
-        let msg = '(' + nick + ') Daily Forecast for '// + c.bold.blue(days[0].date) + ' in '
-          + c.bold.navy(res.location.name + ', ' + res.location.region) + ' — '
-          + days[0].day.condition.text + ', '
-          + days[0].day.avgtemp_f + '°F (' + days[0].day.avgtemp_c + '°C)'
+        let msg = '(' + nick + ') Daily Forecast for ';
+        // + c.bold.blue(days[0].date) + ' in '
+
+        // append location
+        let country = res.location.country;
+        if (country.includes('United States')) {
+          country = 'USA';
+        } else if (country.includes('Taiwan')) {
+          country = 'Formosa';
+        }
+        msg += c.bold.navy(res.location.name + ', ' + res.location.region + ', ' + country) + ' — ';
+        // append condition text
+        msg += days[0].day.condition.text + ', ';
+
+        // append weather values
+        msg += days[0].day.avgtemp_f + '°F (' + days[0].day.avgtemp_c + '°C)'
           + separator + c.bold('High: ') + days[0].day.maxtemp_f + '°F (' + days[0].day.maxtemp_c + '°C)'
           + separator + c.bold('Low: ') + days[0].day.mintemp_f + '°F (' + days[0].day.mintemp_c + '°C)'
           + separator + c.bold('Humidity: ') + days[0].day.avghumidity + '%'
